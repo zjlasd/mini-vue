@@ -13,17 +13,12 @@ describe("readonly", () => {
         expect(wrapped.foo).toBe(1)
     })
 
-    it("warn then call set", () => {
-
+    it("should call consloe.warn then when set", () => {
         console.warn = jest.fn()
-
-
         const user = readonly({
             age: 10
         })
-
         user.age = 11
-
         expect(console.warn).toHaveBeenCalled()
 
     })
