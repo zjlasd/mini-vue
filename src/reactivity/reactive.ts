@@ -1,6 +1,6 @@
 import { mutableHandlers, readonlyHandles } from "./baseHandlers"
 
-export const enum ReactiveFlages{
+export const enum ReactiveFlages {
     IS_REACTIVE = "__v_isReactive",
     IS_READONLY = "__v_isReadonly"
 }
