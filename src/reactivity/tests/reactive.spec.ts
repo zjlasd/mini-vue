@@ -1,4 +1,4 @@
-import { isReactive, reactive } from "../reactive"
+import { isProxy, isReactive, reactive } from "../reactive"
 
 
 describe("reactive", () => {
@@ -8,7 +8,7 @@ describe("reactive", () => {
         expect(original).not.toBe(observed)
         expect(observed.foo).toBe(1)
         expect(isReactive(observed)).toBe(true)
-        expect(isReactive(original)).toBe(false)
+        expect(isProxy(original)).toBe(false)
     });
 
     test("nexted reactive", () => {
