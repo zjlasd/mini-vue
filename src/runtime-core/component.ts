@@ -19,7 +19,7 @@ function setupStatefulComponent(instance) {
     const Component = instance.type;
 
     const { setup } = Component
-
+console.log(setup)
     if (setup) {
         const setupResult = setup()
 

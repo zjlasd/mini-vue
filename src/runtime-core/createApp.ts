@@ -1,12 +1,14 @@
 import { render } from "./render"
-import { craeteVNode } from "./vonde"
+import { createVNode } from "./vonde"
 
 export function createApp(rootComponent) {
+    console.log(rootComponent,111)
     return {
-        mount(rootComponent) {
-            const vnode = craeteVNode(rootComponent)
+        mount(rootContainer) {
+            console.log(rootComponent)
+            const vnode = createVNode(rootComponent)
 
-            render(vnode, rootComponent)
+            render(vnode, rootContainer)
         }
     }
 }

@@ -1,5 +1,5 @@
-import { craeteVNode } from './vonde'
+import { createVNode } from './vonde'
 
 export function h(type, props?, children?) {
-    return craeteVNode(type, props, children)
+    return createVNode(type, props, children)
 }
