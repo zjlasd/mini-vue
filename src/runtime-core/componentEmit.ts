@@ -1,6 +1,6 @@
 
 export function emit(instance, event, ...args) {
-    console.log(event)
+    console.log(event) 
     const { props } = instance
 
     //TPP
