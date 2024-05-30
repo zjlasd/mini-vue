@@ -1,6 +1,6 @@
 import { track, trigger } from "./effect"
 import { ReactiveFlages, isReactive, reactive, readonly } from "./reactive"
-import { extend, isObject } from "../shared"
+import { extend, isObject } from "../shared/index"
 
 const get = createGetter()
 const set = createSetter()
@@ -56,7 +56,7 @@ export const mutableHandlers = {
 export const readonlyHandles = {
     get: readonlyGet,
     set(target, key, value) {
-        console.warn('error')
+        // console.warn('error')
         return true
     }
 }
