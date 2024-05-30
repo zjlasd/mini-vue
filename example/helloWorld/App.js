@@ -8,14 +8,20 @@ export const App = {
             "div",
             {
                 id: "root",
-                class: ["red", "hard"]
+                class: ["red", "hard"],
+                onClick() {
+                    console.log('click')
+                },
+                onMousedown() {
+                    console.log('onmousedown')
+                }
             },
             "hi," + this.msg
             //string
             // "hi，mini-vue"
             //Array
-        // [h("p",{class:"red"},"hi"),h("p",{class:"blue"},"mini-vue")]
-        ) 
+            // [h("p",{class:"red"},"hi"),h("p",{class:"blue"},"mini-vue")]
+        )
     },
 
     setup() {
