@@ -1,82 +1,20 @@
 import { h, ref } from "../../lib/guide-mini-vue.esm.js"
 
+import ArrayToText from './ArrayToText.js'
+import TextToText from './TextToText.js'
+import TextToArray from "./TextToArray.js"
 
-export const App = {
+export default {
     name: "App",
+    setup() { },
 
-    setup() {
-        const count = ref(0)
-
-        const onClick = () => {
-            count.value++
-        }
-
-        const props = ref({
-            foo: "foo",
-            bar: "bar"
-        })
-
-        const onChangePropsDemo1 = () => {
-            props.value.foo = "new-foo"
-        }
-        const onChangePropsDemo2 = () => {
-            props.value.foo = undefined
-        }
-        const onChangePropsDemo3 = () => {
-            props.value = {
-                foo: "foo"
-            }
-        }
-
-
-
-        return {
-            count,
-            onClick,
-            props,
-            onChangePropsDemo1,
-            onChangePropsDemo2,
-            onChangePropsDemo3
-        }
-    },
     render() {
-        return h(
-            "div",
-            {
-                id: "root",
-                ...this.props,
-            },
-            [
-                h("div", {}, "count:" + this.count),//收集依赖
-                h(
-                    "button",
-                    {
-                        onClick: this.onClick,
-                    },
-                    "click"
-                ),
-                h(
-                    "button",
-                    {
-                        onClick: this.onChangePropsDemo1,
-                    },
-                    "值改变了"
-                ),
-                h(
-                    "button",
-                    {
-                        onClick: this.onChangePropsDemo2,
-                    },
-                    "值变成undefined"
-                ),
-                h(
-                    "button",
-                    {
-                        onClick: this.onChangePropsDemo3,
-                    },
-                    "值被删除了"
-                ),
-            ]
-        )
+        return h("div", { tId: 1 }, [
+            h("p", {}, "主页"),
+            // h(ArrayToText),
+            // h(TextToText),
+            // h(TextToArray),
+            
+        ])
     }
 }
