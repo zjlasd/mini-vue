@@ -152,13 +152,17 @@ export function createRender(options) {
                 i++
             }
         } else {
+            //中间对比
             let s1 = i
             let s2 = i
 
             const toBePatched = e2 - s2 + 1
             let patched = 0
-
             const keyToNewIndexMap = new Map()
+            const newIndexToOldIndexMap = new Array(toBePatched)
+            let moved = false
+            let maxNewIndexSoFar = 0;
+            for (let i = 0; i < toBePatched; i++)newIndexToOldIndexMap[i] = 0;
 
             for (let i = s2; i <= e2; i++) {
                 const nextChild = c2[i]
@@ -188,10 +192,41 @@ export function createRender(options) {
                 if (newIndex === undefined) {
                     hostRemove(prevChild.el)
                 } else {
+                    if (newIndex >= maxNewIndexSoFar) {
+                        maxNewIndexSoFar = newIndex
+                    } else {
+                        moved = true
+                    }
+
+                    newIndexToOldIndexMap[newIndex - s2] = i + 1
+
                     patch(prevChild, c2[newIndex], container, parentComponent, null)
                     patched++
                 }
             }
+            const increasingNewIndexSequence = moved ? getSequence(newIndexToOldIndexMap) : []
+            let j = increasingNewIndexSequence.length - 1
+
+            for (let i = toBePatched - 1; i >= 0; i--) {
+
+                const nextIndex = i + s2
+                const nextChild = c2[nextIndex]
+                const anchor = nextIndex + 1 < l2 ? c2[nextIndex + 1].el : null;
+
+                if (newIndexToOldIndexMap[i] === 0) {
+                    patch(null, nextChild, container, parentComponent, anchor)
+                }
+
+                if (moved) {
+                    if (j < 0 || i !== increasingNewIndexSequence[j]) {
+                        hostInsert(nextChild.el, container, anchor)
+                    } else {
+                        j--
+                    }
+                }
+
+            }
+
 
         }
 
@@ -307,5 +342,37 @@ export function createRender(options) {
         createApp: createAppAPI(render)
     }
 
+}
+
+function getSequence(arr) {
+    if (arr.length === 0) return [];
+
+    const dp = new Array(arr.length).fill(1);
+    const prev = new Array(arr.length).fill(-1);
+    let res = 1;
+    let resIndex = 0;
+
+    for (let i = 1; i < arr.length; i++) {
+        for (let j = 0; j < i; j++) {
+            if (arr[i] > arr[j]) {
+                if (dp[i] < dp[j] + 1) {
+                    dp[i] = dp[j] + 1;
+                    prev[i] = j;
+                }
+            }
+        }
+        if (res < dp[i]) {
+            res = dp[i];
+            resIndex = i;
+        }
+    }
+
+    const lisIndices: Array<number> = [];
+    for (let i = resIndex; i >= 0; i = prev[i]) {
+        lisIndices.push(i);
+        if (prev[i] === -1) break;
+    }
+    lisIndices.reverse();
+    return lisIndices;
 }
 
