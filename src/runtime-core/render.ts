@@ -5,6 +5,7 @@ import { Fragment, Text } from "./vonde"
 import { createAppAPI } from "./createApp"
 import { effect } from "../reactivity/effect"
 import { shouldUpdateComponent } from "./componentUpdateUtils"
+import { queueJobs } from "./scheduler"
 
 
 export function createRender(options) {
@@ -360,7 +361,14 @@ export function createRender(options) {
                 patch(preSubTree, subTree, container, instance, anchor)
             }
 
-        })
+        }, {
+            scheduler() {
+                console.log('scheduler')
+                queueJobs(instance.update)
+            }
+        }
+
+        )
 
     }
 
