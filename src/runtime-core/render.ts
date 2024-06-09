@@ -4,6 +4,7 @@ import { ShapeFlags } from "../shared/ShapeFlags"
 import { Fragment, Text } from "./vonde"
 import { createAppAPI } from "./createApp"
 import { effect } from "../reactivity/effect"
+import { shouldUpdateComponent } from "./componentUpdateUtils"
 
 
 export function createRender(options) {
@@ -182,7 +183,7 @@ export function createRender(options) {
                 if (prevChild.key !== null) {
                     newIndex = keyToNewIndexMap.get(prevChild.key)
                 } else {
-                    for (let j = s2; j < e2; j++) {
+                    for (let j = s2; j <= e2; j++) {
                         if (isSomeVNodeType(prevChild, c2[j])) {
                             newIndex = j
                             break;
@@ -304,18 +305,34 @@ export function createRender(options) {
     }
 
     function processComponent(n1, n2, container, parentComponent, anchor) {
-        mountComponent(n2, container, parentComponent, anchor)
+        if (!n1) {
+            mountComponent(n2, container, parentComponent, anchor)
+        } else {
+            updateComponent(n1, n2)
+        }
+    }
+
+    function updateComponent(n1, n2) {
+        const instance = (n2.component = n1.component)
+        if (shouldUpdateComponent(n1, n2)) {
+            instance.next = n2
+            instance.update()
+        } else {
+            n2.el = n1.el
+            instance.vnode = n2
+        }
+
     }
 
     function mountComponent(initialVnode, container, parentComponent, anchor) {
-        const instance = createComponentInstance(initialVnode, parentComponent)
+        const instance = (initialVnode.component = createComponentInstance(initialVnode, parentComponent))
 
         setupComponent(instance)
         setupRenderEffect(instance, initialVnode, container, anchor)
     }
 
     function setupRenderEffect(instance, initialVnode, container, anchor) {
-        effect(() => {
+        instance.update = effect(() => {
             if (!instance.isMounted) {
                 console.log('init')
                 const { proxy } = instance
@@ -327,6 +344,15 @@ export function createRender(options) {
             }
             else {
                 console.log('update')
+                //需要一个vnode
+                const { next, vnode } = instance;
+                if (next) {
+                    next.el = vnode.el
+
+                    updateComponentRenderer(instance, next)
+                }
+
+
                 const { proxy } = instance
                 const subTree = instance.render.call(proxy)
                 const preSubTree = instance.subTree
@@ -343,6 +369,14 @@ export function createRender(options) {
     }
 
 }
+
+function updateComponentRenderer(instance, nextVNode) {
+    instance.vnode = nextVNode
+    instance.next = null
+
+    instance.props = nextVNode.props
+}
+
 
 function getSequence(arr) {
     if (arr.length === 0) return [];

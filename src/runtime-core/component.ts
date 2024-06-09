@@ -10,13 +10,14 @@ export function createComponentInstance(vnode, parent) {
     const component = {
         vnode,
         type: vnode.type,
+        next: null,
         setupState: {},
         props: {},
         slots: {},
         provides: parent ? parent.provides : {},
         parent,
-        subTree:{},
-        isMounted:false,
+        subTree: {},
+        isMounted: false,
         emit: () => { }
     }
     component.emit = emit.bind(null, component) as any
@@ -57,7 +58,7 @@ function setupStatefulComponent(instance) {
 function handleSetupResult(instance, setupResult) {
 
     if (typeof setupResult === "object") {
-        instance.setupState = proxyRefs(setupResult) 
+        instance.setupState = proxyRefs(setupResult)
     }
     finishComponentSetup(instance)
 }
