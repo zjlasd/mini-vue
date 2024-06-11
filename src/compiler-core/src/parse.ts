@@ -63,8 +63,6 @@ function parseText(context) {
         }
     }
 
-
-
     //1.获取content
     const content = parseTextData(context, endIndex);
     console.log("context", content)
