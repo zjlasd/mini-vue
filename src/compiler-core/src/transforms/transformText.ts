@@ -4,7 +4,6 @@ import { isText } from "../utils";
 export function transformText(node) {
 
     if (node.type === NodeTypes.ELEMENT) {
-
         return () => {
             const { children } = node
             let currentContainer;
